@@ -59,7 +59,9 @@ export class CreateEmployeeUseCase implements UseCase<CreateEmployeeDTO, Promise
       const shiftOrError = Shift.create({
         remainingShifts: 2,
         lastShiftStart: moment.utc('1970-01-01').format(),
-        lastShiftEnd: moment.utc('1970-01-01').add(12, 'hours').format()
+        lastShiftEnd: moment.utc('1970-01-01').add(12, 'hours').format(),
+        secondLastShiftStart: moment.utc('1970-01-03').format(),
+        secondLastShiftEnd: moment.utc('1970-01-03').add(12, 'hours').format()
       }, employee.id)
       
       const shift = shiftOrError.getValue();

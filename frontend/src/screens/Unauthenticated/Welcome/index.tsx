@@ -5,6 +5,7 @@ import { colors, sizes, fonts, width, height } from 'utils/ui';
 import navigationOptions from './navigationOptions';
 import { StackNavigationProp, } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { employeeUseCases } from 'app-core/useCases';
 
 type UnauthenticatedStackParamList = {
     WELCOME: undefined;
@@ -21,6 +22,7 @@ type Props = {
 const Welcome = (props: Props) => {
     const [showTerms, setShowResults] = React.useState<boolean>(false);
     const scrollX = React.useRef(new Animated.Value(0)).current;
+    const [results, setResults] = React.useState<object[]>([]);
 
     const illustrations = [
         { id: 0, name: require('../../../assets/images/wheel.png') },
@@ -28,8 +30,13 @@ const Welcome = (props: Props) => {
         { id: 2, name: require('../../../assets/images/stress_2.png') },
     ]
 
-    const spinTheWheel = () => {
-
+    const spinTheWheel = async () => {
+        // console.log(employeeUseCases.generateSchedule())
+        let schedule = await employeeUseCases.generateSchedule();
+        // console.log(schedule)
+        setShowResults(true);
+        setResults(schedule.result);
+        // console.log(schedule.results, 'results');
     }
 
 
@@ -40,9 +47,15 @@ const Welcome = (props: Props) => {
                     <Text h2 light>Generated Shift</Text>
 
                     <ScrollView style={{ marginVertical: sizes.padding }}>
-                        <Text caption gray height={24} style={{ marginBottom: sizes.base }}>
-                            1. First employee
-                         </Text>
+                        {
+                            results.map((item: any) => {
+                                return (
+                                    <Text caption gray height={24} style={{ marginBottom: sizes.base }}>
+                                        1. First employee
+                                    </Text>
+                                )
+                            })
+                        }
             
                     </ScrollView>
 

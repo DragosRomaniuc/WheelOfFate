@@ -3,6 +3,7 @@ import { EmployeeMap } from '../mappers/EmployeeMap';
 
 export interface IEmployeeRepo {
   findEmployeeByEmail(email: string): Promise<Employee>;
+  findEmployeeById(id: string): Promise<Employee>;
   exists (email: string): Promise<boolean>;
   create(employee: Employee): Promise<void>;
 }
@@ -18,6 +19,10 @@ export class EmployeeRepo implements IEmployeeRepo {
     return this.models.Employee.findOne({
       email
     });
+  }
+
+  public async findEmployeeById(id: string): Promise<Employee> {
+    return this.models.Employee.findOne(id);
   }
 
   public async exists(email: string): Promise<boolean> {

@@ -20,14 +20,13 @@ function AnimatedSplashScreen({ children, image } : {
       if (isAppReady) {
         Animated.timing(animation, {
           toValue: 0,
-          duration: 10000,
+          duration: 300,
           useNativeDriver: true,
         }).start(() => setAnimationComplete(true));
       }
     }, [isAppReady]);
   
     const onImageLoaded = React.useMemo(() => async () => {
-      // await delay(20000);
       SplashScreen.hide();
       console.disableYellowBox = true;
       try {

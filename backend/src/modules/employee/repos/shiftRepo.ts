@@ -13,7 +13,7 @@ import mongoose from '../../../infra/database/setup';
 export interface IShiftRepo {
   findShiftById(employeeId: EmployeeId): Promise<Shift>;
   findByIdAndUpdate(shiftId: ShiftId, update: object): Promise<Shift>;
-  getShiftsByLastShiftAscSecondLastShiftDesc(): Promise<Shift[]>;
+  getShiftsBySecondLastShiftAscAndConsecutiveDayRule(): Promise<Shift[]>;
   exists(id: ShiftId): Promise<boolean>;
   create(shift: Shift): Promise<void>;
 }
@@ -45,16 +45,21 @@ export class ShiftRepo implements IShiftRepo {
     return !!await this.models.Shift.findById(id);;
   }
 
-  public async getShiftsByLastShiftAscSecondLastShiftDesc(): Promise<Shift[]> {
+  public async getShiftsBySecondLastShiftAscAndConsecutiveDayRule(): Promise<Shift[]> {
     try {
+      var yesterday = Date.now()- 1000*60*60*24;
+
       let shifts = await this.models.Shift
-        .find({})
-        .sort({ lastShiftStart: 1 })
-        .sort({ lastShiftEnd: -1 })
-        .limit(100)
+        .find({
+          lastShiftEnd: { $lt : yesterday }
+        })
+        .sort({ secondLastShiftStart: 1, lastShiftStart: 1})
+        // .sort({ lastShiftStart: 1 })
+        // .limit(100)
         // .sort({ remainingShifts: 2 })
         .exec(); //Ascending
 
+        console.log('din repo', shifts, 'din repo')
       // shifts = shifts.map((shift: Shift) => ShiftMap.toDomain(shift));
 
       return shifts;

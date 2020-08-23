@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ketoshare",
-    "slug": "ketoshare",
+    "name": "wheelofstate",
+    "slug": "wheelofstate",
     "platforms": [
       "ios",
       "android",
@@ -11,7 +11,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "https://i.ibb.co/2hHxwHG/ketoshare.png",
+      "image": "https://i.imgur.com/xdTwhCL.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
