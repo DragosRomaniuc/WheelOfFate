@@ -82,8 +82,8 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
         return {
           _id: shift._id,
           totalShifts: shift.totalShifts + 1,
-          lastShiftStart: moment.utc(),
-          lastShiftEnd: moment.utc().add(12, 'hours'),
+          lastShiftStart: index === 1 ? moment.utc() : moment.utc().add(12, 'hours'),
+          lastShiftEnd: index === 1 ? moment.utc().add(12, 'hours') : moment.utc().add(24, 'hours'),
           secondLastShiftStart: moment(shift.lastShiftStart).utc(),
           secondLastShiftEnd: moment(shift.lastShiftEnd).utc(),
           remainingShifts: shift.remainingShifts === 2 ? 1 : shift.remainingShifts === 1 ? 0 : 2

@@ -24,6 +24,7 @@ const Welcome = (props: Props) => {
     const [showTerms, setShowResults] = React.useState<boolean>(false);
     const scrollX = React.useRef(new Animated.Value(0)).current;
     const [results, setResults] = React.useState<object[]>([]);
+    const [newEmployee, setNewEmployee] = React.useState(null);
 
     const illustrations = [
         { id: 0, name: require('../../../assets/images/wheel.png') },
@@ -33,11 +34,21 @@ const Welcome = (props: Props) => {
 
     const spinTheWheel = async () => {
         // console.log(employeeUseCases.generateSchedule())
+       try {
         let schedule = await employeeUseCases.generateSchedule();
         // console.log(schedule)
         setShowResults(true);
         setResults(schedule.result);
+       } catch (err) {
+           console.log(err);
+       }
         // console.log(schedule.results, 'results');
+    };
+
+    const createRandomEmployee = async () => {
+        let createdEmployee = await employeeUseCases.createRandomEmployee();
+        console.log('createdEmployee', createdEmployee);
+        setNewEmployee(createdEmployee);
     }
 
 
@@ -71,9 +82,13 @@ const Welcome = (props: Props) => {
                     </ScrollView>
 
                     <Block middle padding={[sizes.base / 2, 0]}>
-                        <Button gradient onPress={() => setShowResults(false)}>
-                            <Text center white>Ok</Text>
+                        <Button gradient onPress={() => setShowResults(false)} style={{marginBottom: 30}}>
+                            <Text center white>Generate another shift</Text>
                         </Button>
+                    <Button black onPress={() => setShowResults(false)} stlye={{padding: 20}}>
+                            <Text center white>CHOOSE THIS SHIFT </Text>
+                        </Button>
+                        <Text center white> <Text color="red">Logic is implemented, ±4hours of coding needed</Text></Text>
                     </Block>
                 </Block>
             </Modal>
@@ -184,9 +199,12 @@ const Welcome = (props: Props) => {
                 <Button gradient={true} onPress={() => spinTheWheel()}>
                     <Text center semibold white>SPIN</Text>
                 </Button>
-                <Button white shadow onPress={() => spinTheWheel()} margin={[20, 0]}>
-                    <Text center semibold>Reset Employees Shifts</Text>
+                <Button white shadow onPress={() => createRandomEmployee()} margin={[20, 0]}>
+                    <Text center semibold>Create Random Employee</Text>
                 </Button>
+                {newEmployee && <Text center middle black>
+                        {newEmployee?.firstName} {newEmployee?.lastName} {newEmployee?.email} created!
+                    </Text>}
                 <Button style={{ backgroundColor: 'transparent' }} onPress={() => setShowResults(true)}>
                     <Text center caption gray>Results</Text>
                 </Button>

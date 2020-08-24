@@ -1,8 +1,11 @@
 import { employeeRepository } from './../repositories/employeeRepository'
-import { generateSchedule } from './Employee';
+import { generateSchedule, createRandomEmployee } from './Employee';
 
 const employeeUseCases = {
   generateSchedule: generateSchedule({
+    employeeRepository: employeeRepository
+  }),
+  createRandomEmployee: createRandomEmployee({
     employeeRepository: employeeRepository
   })
 }
