@@ -3,7 +3,7 @@ import { EmployeeMap } from '../mappers/EmployeeMap';
 
 export interface IEmployeeRepo {
   findEmployeeByEmail(email: string): Promise<Employee>;
-  findEmployeeById(id: string): Promise<Employee>;
+  findEmployeeByIds(ids: string[]): Promise<Employee[]>
   exists (email: string): Promise<boolean>;
   create(employee: Employee): Promise<void>;
 }
@@ -21,8 +21,12 @@ export class EmployeeRepo implements IEmployeeRepo {
     });
   }
 
-  public async findEmployeeById(id: string): Promise<Employee> {
-    return this.models.Employee.findOne(id);
+  public async findEmployeeByIds(ids: string[]): Promise<Employee[]> {
+   try {
+    return this.models.Employee.find().where('_id').in(ids).select('_id firstName lastName email').lean()
+   } catch (err) {
+     return Promise.reject(err);
+   }
   }
 
   public async exists(email: string): Promise<boolean> {

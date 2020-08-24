@@ -11,6 +11,7 @@ import { CreateShiftErrors } from '../createShift/CreateShiftErrors';
 import { Shift } from '../../domain/shift';
 import { UniqueEntityID } from '../../../../core/domain/UniqueEntityID';
 import { ShiftId } from '../../domain/shiftId';
+import _ from 'lodash';
 
 
 type Response = Either<
@@ -86,8 +87,8 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
           remainingShifts: shift.remainingShifts === 2 ? 1 : shift.remainingShifts === 1 ? 0 : 2
         }
 
-        await this.shiftRepo.findByIdAndUpdate(shiftId, updateObject);
-        
+        // await this.shiftRepo.findByIdAndUpdate(shiftId, updateObject);
+
         return {
           _id: shift._id,
           totalShifts: shift.totalShifts + 1,
@@ -100,7 +101,7 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
         
       }));
       
-      console.log('toReturn', toReturn)
+
 
 
       return Result.ok<any>(toReturn);
@@ -144,14 +145,32 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
 
       // shifts = filteredByConsecutiveDayRule.getValue();
 
-      let choosen = await this.chooseEmployees(shifts);
+      let chosen = await this.chooseEmployees(shifts);
+
+      let result = chosen.getValue();
+
+      // console.log('result',result);
+
+      let ids = result.map((shift: any) => shift._id);
+
+      let toReturn = await this.employeeRepo.findEmployeeByIds(ids);
+
+      let bla = result.map((a:any) => {
+        let found: any = toReturn.find((b: any) => b._id === a._id);
+        return {
+          ...a,
+         ...found
+        }
+      })
+
+      // console.log(toReturn)
+      
 
 
 
 
 
-
-      return right(Result.ok<any>(choosen.getValue())) as Response;
+      return right(Result.ok<any>(bla)) as Response;
       // await this.shiftRepo.create(shift);
 
     } catch (err) {
