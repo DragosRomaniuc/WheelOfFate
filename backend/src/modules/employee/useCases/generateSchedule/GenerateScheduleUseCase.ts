@@ -7,7 +7,6 @@ import { GenericAppError } from '../../../../core/logic/AppError'
 import { GenerateScheduleErrors } from './GenerateScheduleErrors'
 import { IEmployeeRepo } from '../../repos/employeeRepo';
 import { IShiftRepo } from '../../repos/shiftRepo';
-import { CreateShiftErrors } from '../createShift/CreateShiftErrors';
 import { Shift } from '../../domain/shift';
 import { UniqueEntityID } from '../../../../core/domain/UniqueEntityID';
 import { ShiftId } from '../../domain/shiftId';
@@ -31,15 +30,6 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
     this.employeeRepo = employeeRepo;
     this.shiftRepo = shiftRepo;
   }
-
-  // private async getShiftsByRemainingShifts () {
-  //   try {
-  //     let shifts = this.shiftRepo.
-  //   } catch (err) {
-  //     console.log(err);
-  //     Promise.reject(err);
-  //   }
-  // }
 
   private getShiftsBySecondLastShiftAscAndConsecutiveDayRule = async (): Promise<Result<Shift[]>> => {
     try {
@@ -111,28 +101,7 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
   }
 
   async execute(req: GenerateScheduleDTO): Promise<Response> {
-
-
-    // const employeeOrError = Employee.create({ 
-    //   email, 
-    //   firstName, 
-    //   lastName,
-    // });
-
-    // if (employeeOrError.isFailure) {
-    //   return left(Result.fail<void>(employeeOrError.error)) as Response;
-    // }
-
-    // const employee: Employee = employeeOrError.getValue();
-
-    // const employeeAlreadyExists = await this.employeeRepo.exists(employee.email);
-
-    // if (employeeAlreadyExists) {
-    //   return left(new GenerateScheduleErrors.EmployeeAlreadyExists(employee.email)) as Response;
-    // }
-
     try {
-
       let shiftsOrError = await this.getShiftsBySecondLastShiftAscAndConsecutiveDayRule();
 
       if (shiftsOrError.isFailure) {
@@ -146,16 +115,12 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
       // shifts = filteredByConsecutiveDayRule.getValue();
 
       let chosen = await this.chooseEmployees(shifts);
-
       let result = chosen.getValue();
-
-      // console.log('result',result);
-
       let ids = result.map((shift: any) => shift._id);
 
       let toReturn = await this.employeeRepo.findEmployeeByIds(ids);
 
-      let bla = result.map((a:any) => {
+      let mappedResult = result.map((a:any) => {
         let found: any = toReturn.find((b: any) => b._id === a._id);
         return {
           ...a,
@@ -163,20 +128,11 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
         }
       })
 
-      // console.log(toReturn)
-      
-
-
-
-
-
-      return right(Result.ok<any>(bla)) as Response;
+      return right(Result.ok<any>(mappedResult)) as Response;
       // await this.shiftRepo.create(shift);
 
     } catch (err) {
       return left(new GenericAppError.UnexpectedError(err)) as Response;
     }
-
-    // return right(Result.ok(shifts)) as Response;
   }
 }

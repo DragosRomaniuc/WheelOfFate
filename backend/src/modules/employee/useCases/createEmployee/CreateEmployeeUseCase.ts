@@ -6,7 +6,6 @@ import { GenericAppError } from '../../../../core/logic/AppError'
 import { CreateEmployeeErrors } from './CreateEmployeeErrors'
 import { IEmployeeRepo } from '../../repos/employeeRepo';
 import { IShiftRepo } from '../../repos/shiftRepo';
-import { CreateShiftErrors } from '../createShift/CreateShiftErrors';
 import { Shift } from '../../domain/shift';
 import { UniqueEntityID } from '../../../../core/domain/UniqueEntityID';
 import { ShiftId } from '../../domain/shiftId';
