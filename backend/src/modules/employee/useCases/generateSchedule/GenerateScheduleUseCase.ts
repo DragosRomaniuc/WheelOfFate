@@ -65,13 +65,13 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
     try {
       let chosen: any = shifts.splice(0, 2);
     
-      let toReturn: any = await Promise.all(chosen.map(async (shift: any) => {
+      let toReturn: any = await Promise.all(chosen.map(async (shift: any, index) => {
         let shiftId = ShiftId.create(new UniqueEntityID(shift._id));
 
         let updateObject = {
           totalShifts: shift.totalShifts + 1,
-          lastShiftStart: moment.utc(),
-          lastShiftEnd: moment.utc().add(12, 'hours'),
+          lastShiftStart: index === 1 ? moment.utc() : moment.utc().add(12, 'hours'),
+          lastShiftEnd: index === 1 ? moment.utc().add(12, 'hours') : moment.utc().add(24, 'hours'),
           secondLastShiftStart: shift.lastShiftStart,
           secondLastShiftEnd: shift.lastShiftEnd,
           remainingShifts: shift.remainingShifts === 2 ? 1 : shift.remainingShifts === 1 ? 0 : 2
