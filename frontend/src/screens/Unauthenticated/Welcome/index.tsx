@@ -6,6 +6,7 @@ import navigationOptions from './navigationOptions';
 import { StackNavigationProp, } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { employeeUseCases } from 'app-core/useCases';
+import moment from 'moment';
 
 type UnauthenticatedStackParamList = {
     WELCOME: undefined;
@@ -50,9 +51,19 @@ const Welcome = (props: Props) => {
                         {
                             results.map((item: any) => {
                                 return (
-                                    <Text caption gray height={24} style={{ marginBottom: sizes.base }}>
-                                        1. First employee
+                                    <Block>
+                                        <Text bold height={28} style={{ marginBottom: sizes.base }}>
+                                        Name: {item.firstName} {item.lastName}
+                                       
                                     </Text>
+                                         <Text caption gray height={24} style={{ marginBottom: sizes.base }}>
+                                        Shift start: {moment(item.lastShiftStart).utc().format('DD MMMM YYYY hh:mm A')}
+                                    </Text>
+                                    <Text caption gray height={24} style={{ marginBottom: sizes.base }}>
+                                        Shift end: {moment(item.lastShiftEnd).utc().format('DD MMMM YYYY hh:mm A')}
+                                    </Text>
+                                        </Block>
+                                    
                                 )
                             })
                         }
