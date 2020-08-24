@@ -77,7 +77,7 @@ export class GenerateScheduleUseCase implements UseCase<GenerateScheduleDTO, Pro
           remainingShifts: shift.remainingShifts === 2 ? 1 : shift.remainingShifts === 1 ? 0 : 2
         }
 
-        // await this.shiftRepo.findByIdAndUpdate(shiftId, updateObject);
+        await this.shiftRepo.findByIdAndUpdate(shiftId, updateObject);
 
         return {
           _id: shift._id,
